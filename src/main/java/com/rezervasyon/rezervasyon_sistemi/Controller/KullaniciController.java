@@ -4,6 +4,7 @@ package com.rezervasyon.rezervasyon_sistemi.Controller;
 import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
 import com.rezervasyon.rezervasyon_sistemi.Service.KullaniciService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,17 @@ public class KullaniciController {
     // Service katmanı ile iletişim kurmak için otomatik enjekte edilir
     @Autowired
     private KullaniciService kullaniciService;
+
+    @PostMapping("/giris")
+    public ResponseEntity<?> girisYap(@RequestBody Kullanici gelenKullanici) {
+        Kullanici mevcutKullanici = kullaniciService.girisYap(gelenKullanici.getEmail(), gelenKullanici.getSifre());
+
+        if (mevcutKullanici != null) {
+            return ResponseEntity.ok(mevcutKullanici); // Giriş başarılıysa kullanıcı bilgilerini döner
+        } else {
+            return ResponseEntity.status(401).body("Geçersiz e-posta veya şifre");
+        }
+    }
 
     // Yeni kullanıcı oluşturma endpoint'i
     @PostMapping

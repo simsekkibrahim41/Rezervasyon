@@ -61,6 +61,8 @@ public class Kullanici {
         this.guncellemeTarihi = new Date(); // Kullanıcı her güncellendiğinde tarih güncellenir.
     }
 
+    //Güncelleme yaoıldı 17,18
+
 
 }
 

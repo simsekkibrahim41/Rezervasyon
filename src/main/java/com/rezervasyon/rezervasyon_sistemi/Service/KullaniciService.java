@@ -11,6 +11,18 @@ public class KullaniciService {
 
     private final KullaniciRepository kullaniciRepository;
 
+    public Kullanici girisYap(String email, String sifre) {
+        List<Kullanici> kullanicilar = kullaniciRepository.findAll(); // repository üzerinden eriş
+
+        for (Kullanici kullanici : kullanicilar) {
+            if (kullanici.getEmail().equals(email) && kullanici.getSifre().equals(sifre)) {
+                return kullanici;
+            }
+        }
+
+        return null;
+    }
+
     @Autowired
     public KullaniciService(KullaniciRepository kullaniciRepository) {
         this.kullaniciRepository = kullaniciRepository;

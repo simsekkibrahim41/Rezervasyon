@@ -3,6 +3,7 @@ package com.rezervasyon.rezervasyon_sistemi.Controller;
 // Gerekli importlar
 import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
 import com.rezervasyon.rezervasyon_sistemi.Service.KullaniciService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +29,37 @@ public class KullaniciController {
         }
     }
 
-    // Yeni kullanıcı oluşturma endpoint'i
-    @PostMapping
-    public Kullanici kullaniciKaydet(@RequestBody Kullanici kullanici) {
-        return kullaniciService.kullaniciKaydet(kullanici);
+    // Kullanıcı kayıt olur (henüz veritabanına eklenmez)
+    @PostMapping("/kayit")
+    public ResponseEntity<String> mailIleKayit(@RequestBody Kullanici kullanici) {
+        try {
+            kullaniciService.mailIleKayitOl(kullanici);
+            return ResponseEntity.ok("Doğrulama bağlantısı mailinize gönderildi: " + kullanici.getEmail());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Mail gönderme sırasında hata oluştu");
+        }
     }
+
+    // Kullanıcı maildeki bağlantıya tıklayınca bu çalışır
+    @GetMapping("/dogrula")
+    public ResponseEntity<String> dogrula(@RequestParam("token") String token, HttpServletResponse response) {
+        boolean basarili = kullaniciService.dogrulamaTamamla(token);
+
+        if (basarili) {
+            // Doğrulama başarılıysa frontend'e yönlendirme
+            try {
+                response.sendRedirect("http://localhost:5175/login"); // React login sayfası
+            } catch (Exception e) {
+                return ResponseEntity.ok("Kayıt başarılı! Giriş yapabilirsiniz.");
+            }
+            return ResponseEntity.ok("Kayıt başarılı! Giriş yapabilirsiniz.");
+        } else {
+            return ResponseEntity.badRequest().body("Geçersiz veya süresi dolmuş bağlantı.");
+        }
+    }
+
+
 
     // Tüm kullanıcıları getirme endpoint'i
     @GetMapping

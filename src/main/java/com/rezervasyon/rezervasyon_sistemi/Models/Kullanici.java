@@ -35,6 +35,15 @@ public class Kullanici {
     @Column(name = "email", nullable = false, unique = true) // Email alanı boş bırakılamaz ve her kullanıcı için benzersiz olmalıdır.
     private String email;
 
+    // Kullanıcının maili doğrulayıp doğrulamadığını belirtir
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
+
+    // Mail doğrulama işlemi için gönderilecek token
+    @Column
+    private String verificationToken;
+
+
     @Enumerated(EnumType.STRING) // Enum türünün veri tabanında string olarak saklanmasını sağlar.
     @Column(name = "rol", nullable = false)
     private Rol rol;
@@ -61,7 +70,7 @@ public class Kullanici {
         this.guncellemeTarihi = new Date(); // Kullanıcı her güncellendiğinde tarih güncellenir.
     }
 
-    //Güncelleme yaoıldı 17,18
+
 
 
 }

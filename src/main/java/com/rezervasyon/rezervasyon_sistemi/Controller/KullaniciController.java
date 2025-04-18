@@ -23,11 +23,15 @@ public class KullaniciController {
         Kullanici mevcutKullanici = kullaniciService.girisYap(gelenKullanici.getEmail(), gelenKullanici.getSifre());
 
         if (mevcutKullanici != null) {
-            return ResponseEntity.ok(mevcutKullanici); // Giriş başarılıysa kullanıcı bilgilerini döner
-        } else {
-            return ResponseEntity.status(401).body("Geçersiz e-posta veya şifre");
+            if (!mevcutKullanici.isEmailVerified()) {
+                return ResponseEntity.status(403).body("Mail adresiniz doğrulanmamış. Lütfen e-posta kutunuzu kontrol edin.");
+            }
+            return ResponseEntity.ok(mevcutKullanici);
         }
+
+        return ResponseEntity.status(401).body("Geçersiz e-posta veya şifre");
     }
+
 
     // Kullanıcı kayıt olur (henüz veritabanına eklenmez)
     @PostMapping("/kayit")
@@ -81,10 +85,15 @@ public class KullaniciController {
 
     // Kullanıcı silme endpoint'i
     @DeleteMapping("/{id}")
-    public void kullaniciSil(@PathVariable Long id) {
-        kullaniciService.kullaniciSil(id);
+    public ResponseEntity<String> kullaniciSil(@PathVariable Long id) {
+        try {
+            kullaniciService.kullaniciSil(id);
+            return ResponseEntity.ok("Kullanıcı başarıyla silindi.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Kullanıcı silinemedi: " + e.getMessage());
+        }
     }
 
 
-
+//güncelleme cuma akşamı
 }

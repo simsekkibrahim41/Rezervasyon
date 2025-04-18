@@ -10,6 +10,9 @@ function Kayit() {
     const [sifre, setSifre] = useState('');  // Kullanıcının şifresi
     const [error, setError] = useState('');  // Hata mesajlarını tutacak state
 
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMesaji, setPopupMesaji] = useState("");
+
     const navigate = useNavigate();  // Başarılı kayıt sonrası yönlendirme için
 
     // Form gönderildiğinde çalışacak fonksiyon
@@ -42,7 +45,8 @@ function Kayit() {
             console.log(response.data);  // Backend'den gelen cevabı konsola yazdır
 
             // "Doğrulama bağlantısı mailinize gönderildi: ..." mesajı
-            alert(response.data); 
+            setPopupMesaji(response.data); // Backend'den gelen mesajı al
+            setShowPopup(true);
         } catch (error) {
             // Hata durumunda error state'ini güncelle
             setError('Kayıt işlemi sırasında bir hata oluştu');
@@ -54,10 +58,10 @@ function Kayit() {
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="glass-box p-4" style={{ width: '100%', maxWidth: '400px' }}>
                 <h3 className="form-title">Kayıt Ol</h3>
-                
+
                 {/* Hata mesajı varsa ekranda göster */}
                 {error && <div className="alert alert-danger">{error}</div>}
-                
+
                 <form onSubmit={handleSubmit}>
                     {/* Ad Input */}
                     <div className="mb-3">
@@ -121,6 +125,24 @@ function Kayit() {
                     </div>
                 </form>
             </div>
+            {showPopup && (
+                <div className="popup-overlay">
+                    <div className="popup-content">
+                        <p>{popupMesaji}</p>
+                        <button onClick={() => {
+                            setShowPopup(false);
+                            navigate("/login");
+                        }}>
+                            Tamam
+                        </button>
+                    </div>
+                </div>
+            )}
+
+
+
+
+
         </div>
     );
 }

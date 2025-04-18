@@ -4,6 +4,8 @@ import '../App.css';
 
 function RezervasyonAnaSayfa() {
     const navigate = useNavigate();
+    const kullanici = JSON.parse(localStorage.getItem("kullanici"));
+
 
     const handleLogout = () => {
         localStorage.removeItem("kullanici");
@@ -12,9 +14,37 @@ function RezervasyonAnaSayfa() {
 
     return (
         <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-            <h2 className="form-title mb-5">Rezervasyon Ana Sayfa</h2>
+            <h2 className="form-title text-center"
+                style={{
+                    position: "absolute",
+                    top: "50px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    margin: 0
+                }}
+            >Rezervasyon Ana Sayfa</h2>
 
-            
+
+            {kullanici && kullanici.rol === "ADMIN" && (
+                <button
+                    onClick={() => navigate("/admin")}
+                    className="admin-btn"
+                >
+                    Admin Paneli
+                </button>
+            )}
+
+
+            {kullanici && (
+                <div className="w-100" style={{ marginLeft: "0.5rem" }}>
+                    <h4 className="hosgeldiniz-label">
+                        Hoş geldiniz, {kullanici.ad} {kullanici.soyad}!
+                    </h4>
+                </div>
+            )}
+
+
+
 
             <div className="d-flex gap-4 flex-wrap justify-content-center">
                 {/* Doktor */}

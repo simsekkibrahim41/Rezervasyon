@@ -14,7 +14,8 @@
 }
 
 .login-box {
-  max-width: 400px;
+  width: 295px;              
+  max-width: 100%;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -178,6 +179,63 @@ button:focus-visible {
 .logout-btn:hover {
   background-color: #bb2d3b;
 }
+
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.hosgeldiniz-label {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+.admin-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #201d1d;   /* koyu siyah ton */
+  color: #fff;
+  border: none;
+  padding: 8px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.admin-btn:hover {
+  background-color: #333; /* hover efekti */
+}
+
 
 
 

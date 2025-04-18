@@ -14,17 +14,24 @@ function Giris() {
         try {
             // Backend'e veri gönderme
             const response = await axios.post('http://localhost:8080/api/kullanicilar/giris', {
-                email,
-                sifre,
+                email: email.trim(),
+                sifre: sifre.trim(),
             });
 
             // Başarılı giriş sonrası kullanıcıyı başka bir sayfaya yönlendirme
             console.log(response.data);  // Backend'den gelen cevabı kontrol et
+
+            localStorage.setItem("kullanici", JSON.stringify(response.data));
+            console.log("Gelen kullanıcı bilgisi:", response.data);
             navigate('/anasayfa');  // Giriş başarılıysa dashboard sayfasına yönlendir
 
         } catch (error) {
-            // Hata durumunda error state'ini güncelleme
-            setError('Giriş hatası. E-posta veya şifre yanlış.');
+            if (error.response && error.response.status === 403) {
+                setError("Mail adresiniz doğrulanmamış. Lütfen e-postanızı kontrol edin.");
+            } else {
+                setError("Giriş hatası. E-posta veya şifre yanlış.");
+            }
+    
             console.error('Giriş hatası:', error);
         }
     };

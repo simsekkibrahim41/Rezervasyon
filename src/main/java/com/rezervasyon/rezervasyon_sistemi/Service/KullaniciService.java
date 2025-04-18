@@ -17,16 +17,22 @@ public class KullaniciService {
     private final KullaniciRepository kullaniciRepository;
 
     public Kullanici girisYap(String email, String sifre) {
-        List<Kullanici> kullanicilar = kullaniciRepository.findAll(); // repository üzerinden eriş
+        Kullanici kullanici = kullaniciRepository.findByEmail(email);
 
-        for (Kullanici kullanici : kullanicilar) {
-            if (kullanici.getEmail().equals(email) && kullanici.getSifre().equals(sifre)) {
-                return kullanici;
+        if (kullanici != null && kullanici.getSifre().equals(sifre)) {
+            return kullanici;
+        }
+
+        for (Kullanici bekleyen : bekleyenKullanicilar.values()) {
+            if (bekleyen.getEmail().equals(email) && bekleyen.getSifre().equals(sifre)) {
+                return bekleyen;
             }
         }
 
         return null;
     }
+
+
 
     @Autowired
     public KullaniciService(KullaniciRepository kullaniciRepository) {
@@ -69,38 +75,46 @@ public class KullaniciService {
 
     // Mail doğrulama süreci başlatılır (veritabanına kaydetmez)
     public void mailIleKayitOl(Kullanici kullanici) {
-        // 1. Token üret
+        // Token üret
         String token = UUID.randomUUID().toString();
-
-        // 2. Kullanıcıya token ata
         kullanici.setVerificationToken(token);
         kullanici.setEmailVerified(false);
 
-        // 3. Bekleyen kullanıcılar listesine ekle (doğrulanana kadar)
         bekleyenKullanicilar.put(token, kullanici);
 
-        // 4. Mail gönder
+        System.out.println("Bekleyen kullanıcı eklendi: " + kullanici.getEmail());
+
+        // Mail gönder
         String dogrulamaLinki = "http://localhost:8080/api/kullanicilar/dogrula?token=" + token;
+
+        String icerik = "Merhaba " + kullanici.getAd() + " " + kullanici.getSoyad() + ",\n\n" +
+                "Rezervasyon Sistemine Hoşgeldiniz.\n" +
+                "Kayıt işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:\n\n" +
+                dogrulamaLinki + "\n\n";
+
         emailService.sendMail(
                 kullanici.getEmail(),
-                "Mail Doğrulama - Rezervasyon Sistemi",
-                "Merhaba " + kullanici.getAd() + ",\n\n" +
-                        "Kayıt işleminizi tamamlamak için lütfen aşağıdaki bağlantıya tıklayın:\n" +
-                        dogrulamaLinki + "\n\nTeşekkürler!"
+                "Hesabınızı Aktifleştirin - Mail Doğrulama ",
+                icerik
         );
     }
 
     // Doğrulama linkine tıklanınca çağrılır
     public boolean dogrulamaTamamla(String token) {
+
         Kullanici kullanici = bekleyenKullanicilar.get(token);
 
         if (kullanici != null) {
+
+            System.out.println(" Doğrulama ile veritabanına kaydedilen şifre: " + kullanici.getSifre());
+
             kullanici.setEmailVerified(true);
-            kullaniciRepository.save(kullanici);
-            bekleyenKullanicilar.remove(token);
+            kullaniciRepository.save(kullanici); //  İlk kez burada veritabanına kaydolur
+            bekleyenKullanicilar.remove(token); // Artık map'ten sil
             return true;
         }
-        return false;
+
+        return false; // Token bulunamazsa: geçersiz ya da süresi dolmuş
     }
 
 

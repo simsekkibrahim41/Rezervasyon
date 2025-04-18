@@ -5,6 +5,7 @@ import './index.css';
 
 //SAYFA GEÇİŞ YAPISI İMPORT EDİLİYOR
 
+import AdminPanel from "./Sayfalar/AdminPanel";
 import Giris from './Sayfalar/Giris';
 import Kayit from './Sayfalar/Kayit';
 import RezervasyonAnaSayfa from './Sayfalar/RezervasyonAnaSayfa';
@@ -18,6 +19,7 @@ function App() {
         <Route path="/anasayfa" element={<RezervasyonAnaSayfa />} />
         <Route path="/login" element={<Giris />} />
         <Route path="/kayit" element={<Kayit />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>         
     </Router> // sAYFA GEÇİŞLERİ BU YAPIYLA YÖNETİLİR, Routes İSE ADRESLERİN LİSTELENDİĞİ BLOGU KAPSAR
   );

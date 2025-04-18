@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface KullaniciRepository extends JpaRepository<Kullanici, Long>
 {
     Kullanici findByEmail(String email);
-
+    Kullanici findByVerificationToken(String token);
     /*
     * // Belirli bir rolün tüm kullanıcılarını listele
     List<Kullanici> findByRol(Kullanici.Rol rol);

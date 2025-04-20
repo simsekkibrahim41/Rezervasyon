@@ -29,6 +29,9 @@ public class Otel {
     @Column(name = "adres")
     private String adres;
 
+    @Column(name = "aciklama")
+    private String aciklama;
+
     @Column(name = "telefon")
     private String telefon;
 

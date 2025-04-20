@@ -5,10 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Date;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import com.rezervasyon.rezervasyon_sistemi.Enums.RezervasyonTipi;
-
 
 @Entity
 @Table(name = "rezervasyonlar")
@@ -23,15 +20,18 @@ public class Rezervasyon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Kullanıcı ilişkisi
     @ManyToOne
-    @JoinColumn(name = "kullanici_id", nullable = false) // Kullanıcı rezervasyon ilişkisi
+    @JoinColumn(name = "kullanici_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Kullanici kullanici;
 
-    @Enumerated(EnumType.STRING) // Enum'u veri tabanında string olarak saklar
+    // Rezervasyon tipi: DOKTOR, OTEL, RESTORAN
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RezervasyonTipi rezervasyonTipi; // "DOKTOR", "RESTORAN", "OTEL"
+    private RezervasyonTipi rezervasyonTipi;
 
+    // Tarih (LocalDateTime tercih edilmiş, güzel seçim)
     @Column(nullable = false)
     private LocalDateTime tarih;
 
@@ -40,23 +40,37 @@ public class Rezervasyon {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private  Date  olusturmaTarihi;
+    private Date olusturmaTarihi;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private  Date  guncellemeTarihi;
+    private Date guncellemeTarihi;
 
-    // Yeni rezervasyon oluşturulurken çalışacak
+    // Yeni eklenecek: doktor/otel/restoran ilişkileri 👇
+
+    @ManyToOne
+    @JoinColumn(name = "doktor_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Doktor doktor;
+
+    @ManyToOne
+    @JoinColumn(name = "otel_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Otel otel;
+
+    @ManyToOne
+    @JoinColumn(name = "restoran_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Restoran restoran;
+
     @PrePersist
     protected void onCreate() {
         this.olusturmaTarihi = new Date();
         this.guncellemeTarihi = new Date();
     }
 
-    // Rezervasyon güncellendiğinde çalışacak
     @PreUpdate
     protected void onUpdate() {
         this.guncellemeTarihi = new Date();
     }
-
 }

@@ -22,6 +22,28 @@ function AdminPanel() {
         }
     }, []);
 
+    const handleRezervasyonSil = async (rezervasyonId) => {
+        const onay = window.confirm("Rezervasyonu silmek istediğinize emin misiniz?");
+        if (!onay) return;
+    
+        try {
+            const response = await axios.delete(`http://localhost:8080/api/rezervasyonlar/${rezervasyonId}`);
+            if (response.status === 200) {
+                alert("Rezervasyon başarıyla silindi.");
+    
+                // Silinen rezervasyonu ekrandan da kaldır
+                setRezervasyonlar(prev => prev.filter(r => r.id !== rezervasyonId));
+                setRezModalAcik(false);
+                setSeciliRezervasyon(null);
+            } else {
+                alert("Silme işlemi başarısız!");
+            }
+        } catch (err) {
+            alert("Sunucu hatası oluştu!");
+            console.error("Silme hatası:", err);
+        }
+    };
+
     const handleKullaniciSec = (kullanici) => {
         setSecilenKullanici(kullanici);
         axios

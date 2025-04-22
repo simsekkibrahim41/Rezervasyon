@@ -2,7 +2,8 @@ package com.rezervasyon.rezervasyon_sistemi.Models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rezervasyon.rezervasyon_sistemi.Enums.Rol;
 import java.util.Date;
 import jakarta.persistence.Temporal;
@@ -56,6 +57,14 @@ public class Kullanici {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "guncelleme_tarihi", nullable = false)
     private Date guncellemeTarihi;
+
+    // Kullanıcı silindiğinde ilişkili rezervasyonları da sil
+    @OneToMany(mappedBy = "kullanici", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Rezervasyon> rezervasyonlar;
+
+
+
 
     // Kullanıcı oluşturulduğunda çalışacak metot
     @PrePersist  //veritabanında bir işlem yapılmadan hemen önce çalışır. Manuel değil otomatik tarih ataması yapar

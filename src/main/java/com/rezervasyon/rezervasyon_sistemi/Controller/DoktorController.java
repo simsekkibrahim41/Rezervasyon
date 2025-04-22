@@ -1,5 +1,6 @@
 package com.rezervasyon.rezervasyon_sistemi.Controller;
 
+import com.rezervasyon.rezervasyon_sistemi.Enums.UzmanlikAlani;
 import com.rezervasyon.rezervasyon_sistemi.Models.Doktor;
 import com.rezervasyon.rezervasyon_sistemi.Service.DoktorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +49,15 @@ public class DoktorController {
     public void doktorSil(@PathVariable Long id) {
         doktorService.doktorSil(id);
     }
+
+
+    @GetMapping("/uzmanlik/{uzmanlik}")
+    public List<Doktor> doktorlariUzmanligaGoreGetir(@PathVariable UzmanlikAlani uzmanlik) {
+        return doktorService.getDoktorlarByUzmanlik(uzmanlik);
+    }
+
+
+
+
+
 }

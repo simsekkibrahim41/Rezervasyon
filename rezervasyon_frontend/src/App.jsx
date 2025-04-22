@@ -9,6 +9,8 @@ import AdminPanel from "./Sayfalar/AdminPanel";
 import Giris from './Sayfalar/Giris';
 import Kayit from './Sayfalar/Kayit';
 import RezervasyonAnaSayfa from './Sayfalar/RezervasyonAnaSayfa';
+import DoktorRandevuAl from './Sayfalar/DoktorRandevuAl';
+
 
 
 function App() {
@@ -20,6 +22,7 @@ function App() {
         <Route path="/login" element={<Giris />} />
         <Route path="/kayit" element={<Kayit />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/doktor-randevu" element={<DoktorRandevuAl />} />
       </Routes>         
     </Router> // sAYFA GEÇİŞLERİ BU YAPIYLA YÖNETİLİR, Routes İSE ADRESLERİN LİSTELENDİĞİ BLOGU KAPSAR
   );

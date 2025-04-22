@@ -1,5 +1,6 @@
 package com.rezervasyon.rezervasyon_sistemi.Service;
 
+import com.rezervasyon.rezervasyon_sistemi.Enums.UzmanlikAlani;
 import com.rezervasyon.rezervasyon_sistemi.Models.Doktor;
 import com.rezervasyon.rezervasyon_sistemi.Repository.DoktorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,4 +42,9 @@ public class DoktorService {
     public void doktorSil(Long id) {
         doktorRepository.deleteById(id);
     }
+
+    public List<Doktor> getDoktorlarByUzmanlik(UzmanlikAlani uzmanlikAlani) {
+        return doktorRepository.findByUzmanlikAlani(uzmanlikAlani);
+    }
+
 }

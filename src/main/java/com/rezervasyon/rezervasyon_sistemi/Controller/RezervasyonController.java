@@ -4,6 +4,7 @@ package com.rezervasyon.rezervasyon_sistemi.Controller;
 import com.rezervasyon.rezervasyon_sistemi.Models.Rezervasyon;
 import com.rezervasyon.rezervasyon_sistemi.Service.RezervasyonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,19 @@ public class RezervasyonController {
 
     // Yeni rezervasyon oluşturmak için endpoint
     // HTTP POST isteği alır ve gelen rezervasyonu kaydeder
+//    @PostMapping
+//    public Rezervasyon rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
+//        return rezervasyonService.rezervasyonKaydet(rezervasyon);
+//    }
+
     @PostMapping
-    public Rezervasyon rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
-        return rezervasyonService.rezervasyonKaydet(rezervasyon);
+    public ResponseEntity<Rezervasyon> rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
+        Rezervasyon kaydedilen = rezervasyonService.rezervasyonKaydet(rezervasyon);
+        return ResponseEntity.ok(kaydedilen);
     }
+
+
+
 
     // Tüm rezervasyonları listelemek için endpoint
     // HTTP GET isteği alır ve tüm rezervasyonları döner
@@ -54,5 +64,8 @@ public class RezervasyonController {
         rezervasyonService.rezervasyonSil(id);
     }
 
-
+    @GetMapping("/doktor/{doktorId}")
+    public List<Rezervasyon> getDoktorRandevulari(@PathVariable Long doktorId) {
+        return rezervasyonService.getRezervasyonlarByDoktorId(doktorId);
+    }
 }

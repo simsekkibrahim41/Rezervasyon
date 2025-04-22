@@ -17,6 +17,7 @@ public interface RezervasyonRepository extends JpaRepository<Rezervasyon, Long>
     // Belirli bir tipteki rezervasyonları getir (örneğin sadece "OTEL" rezervasyonlarını)
     List<Rezervasyon> findByRezervasyonTipi(RezervasyonTipi rezervasyonTipi);
 
+    List<Rezervasyon> findByDoktorId(Long doktorId);
 
     /**
      *      // Belirli bir tarih aralığındaki rezervasyonları getir

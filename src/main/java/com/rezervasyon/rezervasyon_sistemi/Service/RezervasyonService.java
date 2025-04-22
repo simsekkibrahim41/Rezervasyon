@@ -42,4 +42,8 @@ public class RezervasyonService {
         rezervasyonRepository.deleteById(id);
     }
 
+    public List<Rezervasyon> getRezervasyonlarByDoktorId(Long doktorId) {
+        return rezervasyonRepository.findByDoktorId(doktorId);
+    }
+
 }

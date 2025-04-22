@@ -1,5 +1,6 @@
 package com.rezervasyon.rezervasyon_sistemi.Models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,20 +32,21 @@ public class Rezervasyon {
     @Column(nullable = false)
     private RezervasyonTipi rezervasyonTipi;
 
-    // Tarih (LocalDateTime tercih edilmiş, güzel seçim)
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(nullable = false)
     private LocalDateTime tarih;
 
     @Column(nullable = false)
     private String aciklama;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(nullable = false, updatable = false)
-    private Date olusturmaTarihi;
+    private LocalDateTime olusturmaTarihi;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     @Column(nullable = false)
-    private Date guncellemeTarihi;
+    private LocalDateTime guncellemeTarihi;
 
     // Yeni eklenecek: doktor/otel/restoran ilişkileri 👇
 
@@ -65,12 +67,12 @@ public class Rezervasyon {
 
     @PrePersist
     protected void onCreate() {
-        this.olusturmaTarihi = new Date();
-        this.guncellemeTarihi = new Date();
+        this.olusturmaTarihi = LocalDateTime.now();
+        this.guncellemeTarihi = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        this.guncellemeTarihi = new Date();
+        this.guncellemeTarihi = LocalDateTime.now();
     }
 }

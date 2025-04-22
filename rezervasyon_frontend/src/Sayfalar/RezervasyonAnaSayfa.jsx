@@ -48,7 +48,7 @@ function RezervasyonAnaSayfa() {
 
             <div className="d-flex gap-4 flex-wrap justify-content-center">
                 {/* Doktor */}
-                <div className="rez-kart" onClick={() => navigate('/doktor')}>
+                <div className="rez-kart" onClick={() => navigate('/doktor-randevu')}>
                     <img src="/doktor.jpg" alt="Doktor" className="rez-img" />
                     <div className="rez-overlay">
                         Doktor Randevusu

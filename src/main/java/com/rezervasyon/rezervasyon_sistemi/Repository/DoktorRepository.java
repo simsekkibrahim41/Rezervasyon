@@ -12,4 +12,7 @@ public interface DoktorRepository extends JpaRepository<Doktor, Long> {
 
     // Gerekirse özel sorgular burada yazılabilir. Örneğin:
      List<Doktor> findByUzmanlikAlani(UzmanlikAlani uzmanlikAlani);
+
+
+
 }

@@ -1,67 +1,125 @@
 .doktor-randevu-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 30px;
-    background: url("arka-plan.jpg");
-    background-size: cover;
-    min-height: 100vh;
-    gap: 20px;
-  }
+  width: 90vw;
+  margin: 30px auto;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  display: flex;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  min-height: 550px;
+  overflow: hidden;
+  justify-content: space-between;
+  gap: 20px;  
+  backdrop-filter: blur(20px);
   
-  .klinik-panel,
-  .saat-panel,
-  .randevular-panel {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 20px;
-    width: 30%;
-    min-height: 400px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
   
-  .klinik-panel h3 {
-    margin-bottom: 10px;
-  }
+}
+
+.sol-panel
+ {
+  width: 30%;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border-right: 1px solid #ddd;
+  color : white;
+}
+.sag-panel {
+  width: 70%;
+  padding: 30px;  
+  background: rgba(0, 0, 0, 0.5);  
+  color : white;
+}
+
+.doktor-listesi {
+  list-style: none;
+  padding: 0px;
+  margin-top: 15px;
+  color: black;
+  padding-right: 20px; 
+  max-height: 500px;
+  overflow-y: auto;
   
-  .dropdown {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .doktor-btn {
-    display: block;
-    width: 100%;
-    margin: 5px 0;
-    padding: 10px;
-    background: black;
-    color: white;
-    border: none;
-    border-radius: 4px;
-  }
-  
-  .saatler {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-  }
-  
-  .saat-btn {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 6px;
-    color: white;
-  }
-  
-  .randevular-panel ul {
-    padding-left: 15px;
-    margin-top: 10px;
-  }
-  
-  .randevular-panel li {
-    margin-bottom: 6px;
-  }
-  
+}
+
+.doktor-listesi li {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #e0f0ff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.doktor-listesi li:hover {
+  background-color: #cce4ff;
+}
+
+.saat-secimi {
+  margin-top: 20px;
+}
+
+.saat-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.saat-grid .bos {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+}
+
+.saat-grid .dolu {
+  background-color: #aaa;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: not-allowed;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-icerik {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-butons {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Butonlar arası boşluk */
+  margin-top: 20px;
+}
+
+
+
+.geri-buton-sol-alt {
+  position: fixed;
+  bottom: 80px;
+}
+
+.geri-buton-sol-alt button {
+  padding: 10px 15px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+

@@ -25,12 +25,12 @@ function AdminPanel() {
     const handleRezervasyonSil = async (rezervasyonId) => {
         const onay = window.confirm("Rezervasyonu silmek istediğinize emin misiniz?");
         if (!onay) return;
-    
+
         try {
             const response = await axios.delete(`http://localhost:8080/api/rezervasyonlar/${rezervasyonId}`);
             if (response.status === 200) {
                 alert("Rezervasyon başarıyla silindi.");
-    
+
                 // Silinen rezervasyonu ekrandan da kaldır
                 setRezervasyonlar(prev => prev.filter(r => r.id !== rezervasyonId));
                 setRezModalAcik(false);
@@ -183,14 +183,20 @@ function AdminPanel() {
                             </div>
                         </div>
                     </div>
-                )}
-
-
+                )}                
 
                 {/* Sağ alt çıkış butonu */}
                 <button className="admin-logout" onClick={handleLogout}>
                     Çıkış Yap
                 </button>
+
+                
+                <div className="admin-geri-buton">
+                    <button onClick={() => window.history.back()}>
+                        Geri
+                        </button>
+                </div>
+
             </div>
         </div>
     );

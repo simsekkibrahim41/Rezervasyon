@@ -54,6 +54,13 @@ public class RezervasyonController {
         return rezervasyonService.rezervasyonGuncelle(rezervasyon);
     }
 
+
+    @GetMapping("/kullanici/{kullaniciId}")
+    public List<Rezervasyon> getKullaniciRandevulari(@PathVariable Long kullaniciId) {
+        return rezervasyonService.getRezervasyonlarByKullaniciId(kullaniciId);
+    }
+
+
     //@PathVariable → URL'den gelen ID
     //@RequestBody → Gövde (body)'deki rezervasyon verisi
 

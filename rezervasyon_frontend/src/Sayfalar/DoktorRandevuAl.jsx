@@ -163,10 +163,11 @@ function DoktorRandevuAl() {
             </div>
           </div>
         )}
-      </div>
 
-      <div className="geri-buton-sol-alt">
-        <button onClick={() => window.history.back()}>← Geri</button>
+        <div className="geri-buton-sol-alt">
+          <button onClick={() => window.history.back()}>← Geri</button>
+        </div>
+
       </div>
     </div>
   );

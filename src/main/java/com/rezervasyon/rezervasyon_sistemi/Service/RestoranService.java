@@ -41,4 +41,8 @@ public class RestoranService {
     public void restoranSil(Long id) {
         restoranRepository.deleteById(id);
     }
+
+    public List<Restoran> getRestoranByMutfakTuru(String mutfakTuru) {
+        return restoranRepository.findByMutfakTuru(mutfakTuru);
+    }
 }

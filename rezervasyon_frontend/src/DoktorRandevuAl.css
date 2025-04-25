@@ -109,8 +109,8 @@
 
 
 .geri-buton-sol-alt {
-  position: fixed;
-  bottom: 80px;
+  position: absolute;
+  bottom: 20px;
 }
 
 .geri-buton-sol-alt button {

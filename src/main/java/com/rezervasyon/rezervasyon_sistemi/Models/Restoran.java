@@ -41,6 +41,10 @@ public class Restoran {
     @Column(name = "mutfak_turu", nullable = false)
     private MutfakTuru mutfakTuru;
 
+    @Column(name = "bos_masa_sayisi")
+    private int bosMasaSayisi;
+
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "olusturma_tarihi", nullable = false, updatable = false)
     private  Date olusturmaTarihi;

@@ -48,4 +48,10 @@ public class RestoranController {
     public void restoranSil(@PathVariable Long id) {
         restoranService.restoranSil(id);
     }
+
+    @GetMapping("/mutfak/{mutfakTuru}")
+    public List<Restoran> mutfagaGoreRestoranlar(@PathVariable String mutfakTuru) {
+        return restoranService.getRestoranByMutfakTuru(mutfakTuru);
+    }
+
 }

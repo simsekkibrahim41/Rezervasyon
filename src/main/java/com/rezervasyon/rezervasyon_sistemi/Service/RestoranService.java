@@ -45,4 +45,14 @@ public class RestoranService {
     public List<Restoran> getRestoranByMutfakTuru(String mutfakTuru) {
         return restoranRepository.findByMutfakTuru(mutfakTuru);
     }
+
+    public List<String> tumSehirleriGetir() {
+        return restoranRepository.findDistinctSehirler();
+    }
+    public List<String> tumMutfakTurleriniGetir() {
+        return restoranRepository.findDistinctMutfakTurleri();
+    }
+
+
+
 }

@@ -1,33 +1,26 @@
-/* Genel container */
 .restoran-rezervasyon-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   width: 95vw;
-  height: 85vh;
+  height: 80vh;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 20px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
   position: relative;
-  margin: auto;
   gap: 20px;
-  box-sizing: border-box;
-  overflow: auto;
 }
 
-/* Sol panel */
 .restoran-sol-panel {
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   border-radius: 10px;
   color: white;
-  min-width: 200px;
 }
 
-/* Sağ panel */
 .restoran-sag-panel {
   flex: 2;
   background-color: rgba(0, 0, 0, 0.3);
@@ -35,22 +28,17 @@
   border-radius: 10px;
   color: white;
   overflow-y: auto;
-  min-height: 100%;
 }
 
-/* Seçim kutuları */
 .select-box {
   width: 100%;
   margin-bottom: 20px;
   padding: 10px;
   font-size: 16px;
-  border-radius: 5px;
-  background-color: white;
-  color: black;
-  font-weight: bold;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-/* Restoran kartı */
 .restoran-karti {
   border: 2px solid white;
   border-radius: 20px;
@@ -63,42 +51,4 @@
 
 .restoran-karti:hover {
   background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Masa ve saat butonları */
-.masa-butonlari,
-.saat-butonlari {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.buton {
-  padding: 10px 20px;
-  background-color: #3498db;
-  border: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s ease;
-}
-
-.buton:hover {
-  background-color: #2980b9;
-}
-
-.buton.disabled {
-  background-color: gray;
-  cursor: not-allowed;
-}
-
-/* Rezervasyon kartı */
-.rezervasyon-karti {
-  border: 2px solid white;
-  border-radius: 20px;
-  padding: 15px;
-  margin-bottom: 20px;
-  background-color: rgba(255, 255, 255, 0.1);
 }

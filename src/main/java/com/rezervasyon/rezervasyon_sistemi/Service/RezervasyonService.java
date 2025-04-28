@@ -1,7 +1,12 @@
 package com.rezervasyon.rezervasyon_sistemi.Service;
 
+import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
+import com.rezervasyon.rezervasyon_sistemi.Models.Restoran;
+import com.rezervasyon.rezervasyon_sistemi.Models.RestoranRezervasyon;
 import com.rezervasyon.rezervasyon_sistemi.Models.Rezervasyon;
+import com.rezervasyon.rezervasyon_sistemi.Repository.RestoranRezervasyonRepository;
 import com.rezervasyon.rezervasyon_sistemi.Repository.RezervasyonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +14,9 @@ import java.util.List;
 
 @Service
 public class RezervasyonService {
+
+    @Autowired
+    private RestoranRezervasyonRepository restoranRezervasyonRepository;
 
     private final RezervasyonRepository rezervasyonRepository;
 
@@ -33,21 +41,21 @@ public class RezervasyonService {
     }
 
     // Rezervasyonu günceller
-    public Rezervasyon rezervasyonGuncelle(Rezervasyon rezervasyon) {
-        return rezervasyonRepository.save(rezervasyon);
-    }
+    public Rezervasyon rezervasyonGuncelle(Rezervasyon rezervasyon) {return rezervasyonRepository.save(rezervasyon);}
 
     // Rezervasyonu siler
-    public void rezervasyonSil(Long id) {
-        rezervasyonRepository.deleteById(id);
+    public void rezervasyonSil(Long id) {rezervasyonRepository.deleteById(id);}
+
+    @Transactional
+    public void restoranRezervasyonSil(Restoran restoran, Kullanici kullanici) {
+        List<RestoranRezervasyon> rezervasyonlar = restoranRezervasyonRepository.findByRestoranIdAndKullaniciId(restoran.getId(), kullanici.getId());
+        if (rezervasyonlar != null && !rezervasyonlar.isEmpty()) {
+            restoranRezervasyonRepository.deleteAll(rezervasyonlar);
+        }
     }
 
-    public List<Rezervasyon> getRezervasyonlarByDoktorId(Long doktorId) {
-        return rezervasyonRepository.findByDoktorId(doktorId);
-    }
+    public List<Rezervasyon> getRezervasyonlarByDoktorId(Long doktorId) {return rezervasyonRepository.findByDoktorId(doktorId);}
 
-    public List<Rezervasyon> getRezervasyonlarByKullaniciId(Long kullaniciId) {
-        return rezervasyonRepository.findByKullaniciId(kullaniciId);
-    }
+    public List<Rezervasyon> getRezervasyonlarByKullaniciId(Long kullaniciId) {return rezervasyonRepository.findByKullaniciId(kullaniciId);}
 
 }

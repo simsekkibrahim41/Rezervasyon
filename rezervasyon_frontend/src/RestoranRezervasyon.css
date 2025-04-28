@@ -1,3 +1,4 @@
+/* Sayfa Genel Yapısı */
 .restoran-rezervasyon-container {
   display: flex;
   flex-direction: row;
@@ -13,6 +14,7 @@
   gap: 20px;
 }
 
+/* Sol Panel */
 .restoran-sol-panel {
   flex: 1;
   background-color: rgba(0, 0, 0, 0.5);
@@ -21,6 +23,7 @@
   color: white;
 }
 
+/* Sağ Panel */
 .restoran-sag-panel {
   flex: 2;
   background-color: rgba(0, 0, 0, 0.3);
@@ -30,6 +33,7 @@
   overflow-y: auto;
 }
 
+/* Seçim Kutuları */
 .select-box {
   width: 100%;
   margin-bottom: 20px;
@@ -39,6 +43,7 @@
   border: 1px solid #ccc;
 }
 
+/* Restoran Kartı */
 .restoran-karti {
   border: 2px solid white;
   border-radius: 20px;
@@ -51,4 +56,119 @@
 
 .restoran-karti:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Masa Seçim Alanı */
+.masa-secim {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.masa-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.masa-button:hover {
+  background-color: #45a049;
+}
+
+/* Saat Seçim Alanı */
+.saat-secim {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.saat-button {
+  padding: 8px 16px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.saat-button:hover {
+  background-color: #1976d2;
+}
+
+/* Modal Arkaplanı */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal İçeriği */
+.modal-icerik {
+  background-color: rgba(0, 0, 0, 0.6);  /* daha koyu oldu */
+  backdrop-filter: blur(8px);
+  padding: 30px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+  
+}
+
+/* Onayla ve İptal Butonları */
+.onayla-button, .iptal-button {
+  margin: 10px 10px 0 10px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  
+}
+
+.onayla-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.onayla-button:hover {
+  background-color: #218838;
+}
+
+.iptal-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.iptal-button:hover {
+  background-color: #c82333;
+}
+
+/* Geri Butonu */
+.geri-butonu {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.geri-butonu:hover {
+  background-color: #5a6268;
 }

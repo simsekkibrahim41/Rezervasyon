@@ -78,5 +78,11 @@ public class RestoranController {
         return restoranService.tumMutfakTurleriniGetir();
     }
 
+    @GetMapping("/filtreli")
+    public List<Restoran> filtreliRestoranlar(
+            @RequestParam("sehir") String sehir,
+            @RequestParam("mutfakTuru") String mutfakTuru) {
 
+        return restoranService.getRestoranBySehirAndMutfakTuru(sehir, mutfakTuru);
+    }
 }

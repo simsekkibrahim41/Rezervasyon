@@ -42,7 +42,7 @@ public class Restoran {
     private MutfakTuru mutfakTuru;
 
     @Column(name = "bos_masa_sayisi")
-    private int bosMasaSayisi;
+    private Integer bosMasaSayisi;
 
 
     @Temporal(TemporalType.TIMESTAMP)

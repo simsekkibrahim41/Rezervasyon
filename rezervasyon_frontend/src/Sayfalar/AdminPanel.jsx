@@ -166,6 +166,11 @@ function AdminPanel() {
                             <p><strong>Tarih:</strong> {new Date(seciliRezervasyon.tarih).toLocaleString()}</p>
                             <p><strong>Tip:</strong> {seciliRezervasyon.rezervasyonTipi}</p>
 
+                            {/* Eğer restoran rezervasyonuysa restoran adını göster */}
+                            {seciliRezervasyon.rezervasyonTipi === "RESTORAN" && seciliRezervasyon.restoran && (
+                                <p><strong>Restoran:</strong> {seciliRezervasyon.restoran.ad}</p>
+                            )}
+
                             <div className="button-group">
                                 <button
                                     className="custom-btn iptal-btn"
@@ -183,18 +188,18 @@ function AdminPanel() {
                             </div>
                         </div>
                     </div>
-                )}                
+                )}
 
                 {/* Sağ alt çıkış butonu */}
                 <button className="admin-logout" onClick={handleLogout}>
                     Çıkış Yap
                 </button>
 
-                
+
                 <div className="admin-geri-buton">
                     <button onClick={() => window.history.back()}>
                         Geri
-                        </button>
+                    </button>
                 </div>
 
             </div>

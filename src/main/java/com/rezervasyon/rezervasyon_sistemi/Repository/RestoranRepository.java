@@ -1,5 +1,6 @@
 package com.rezervasyon.rezervasyon_sistemi.Repository;
 
+import com.rezervasyon.rezervasyon_sistemi.Enums.MutfakTuru;
 import com.rezervasyon.rezervasyon_sistemi.Models.Restoran;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +22,9 @@ public interface RestoranRepository extends JpaRepository<Restoran, Long> {
 
     @Query("SELECT DISTINCT r.mutfakTuru FROM Restoran r")
     List<String> findDistinctMutfakTurleri();
+
+    List<Restoran> findBySehirIgnoreCaseAndMutfakTuru(String sehir, MutfakTuru mutfakTuru);
+
+
 
 }

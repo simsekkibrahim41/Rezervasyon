@@ -67,9 +67,24 @@ public class RezervasyonController {
 
     // Rezervasyonu siler
     @DeleteMapping("/{id}")
-    public void rezervasyonSil(@PathVariable Long id) {
+    public ResponseEntity<String> rezervasyonSil(@PathVariable Long id) {
+        Rezervasyon rezervasyon = rezervasyonService.rezervasyonGetir(id);
+
+        if (rezervasyon == null) {
+            return ResponseEntity.status(404).body("Rezervasyon bulunamadı.");
+        }
+
         rezervasyonService.rezervasyonSil(id);
+
+        if (rezervasyon.getRezervasyonTipi().toString().equals("RESTORAN")) {
+            rezervasyonService.restoranRezervasyonSil(rezervasyon.getRestoran(), rezervasyon.getKullanici());
+        }
+
+        return ResponseEntity.ok("Rezervasyon başarıyla silindi.");
     }
+
+
+
 
     @GetMapping("/doktor/{doktorId}")
     public List<Rezervasyon> getDoktorRandevulari(@PathVariable Long doktorId) {

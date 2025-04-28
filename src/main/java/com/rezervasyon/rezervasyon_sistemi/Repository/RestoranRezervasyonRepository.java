@@ -1,5 +1,7 @@
 package com.rezervasyon.rezervasyon_sistemi.Repository;
 
+import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
+import com.rezervasyon.rezervasyon_sistemi.Models.Restoran;
 import com.rezervasyon.rezervasyon_sistemi.Models.RestoranRezervasyon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,4 +23,14 @@ public interface RestoranRezervasyonRepository extends JpaRepository<RestoranRez
 
     // Belirli bir kullanıcıya ait tüm restoran rezervasyonları
     List<RestoranRezervasyon> findByKullaniciId(Long kullaniciId);
+
+    // Eski method - nesne bazlı silme
+    void deleteByRestoranAndKullanici(Restoran restoran, Kullanici kullanici);
+
+    // Yeni method - id bazlı silme (BUNU ŞİMDİ EKLİYORSUN)
+    void deleteByRestoranIdAndKullaniciId(Long restoranId, Long kullaniciId);
+
+    List<RestoranRezervasyon> findByRestoranIdAndKullaniciId(Long restoranId, Long kullaniciId);
+
 }
+

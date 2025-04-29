@@ -1,5 +1,6 @@
 package com.rezervasyon.rezervasyon_sistemi.Service;
 
+import com.rezervasyon.rezervasyon_sistemi.Enums.RezervasyonTipi;
 import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
 import com.rezervasyon.rezervasyon_sistemi.Models.Restoran;
 import com.rezervasyon.rezervasyon_sistemi.Models.RestoranRezervasyon;
@@ -45,6 +46,11 @@ public class RezervasyonService {
 
     // Rezervasyonu siler
     public void rezervasyonSil(Long id) {rezervasyonRepository.deleteById(id);}
+
+    public List<Rezervasyon> getKullaniciRezervasyonlariByTip(Long kullaniciId, RezervasyonTipi tip) {
+        return rezervasyonRepository.findByKullaniciIdAndRezervasyonTipi(kullaniciId, tip);
+    }
+
 
     @Transactional
     public void restoranRezervasyonSil(Restoran restoran, Kullanici kullanici) {

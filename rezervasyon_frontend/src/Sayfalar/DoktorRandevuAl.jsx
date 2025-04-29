@@ -1,4 +1,4 @@
-
+// Dosya başında eklenen importlar:
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../DoktorRandevuAl.css";
@@ -12,6 +12,7 @@ function DoktorRandevuAl() {
   const [modalAcik, setModalAcik] = useState(false);
   const [basariBilgisi, setBasariBilgisi] = useState(null);
   const [randevularim, setRandevularim] = useState([]);
+  const [secilenTarih, setSecilenTarih] = useState("");
 
   const uzmanliklar = [
     "KARDIYOLOJI", "ORTOPEDI", "DERMATOLOJI", "GASTROENTEROLOJI",
@@ -21,14 +22,15 @@ function DoktorRandevuAl() {
   const kullanici = JSON.parse(localStorage.getItem("kullanici"));
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/api/rezervasyonlar/kullanici/${kullanici.id}`)
-      .then((res) => {
-        console.log("Randevularım:", res.data);
-        setRandevularim(res.data);
-      })
-      .catch((err) => console.error("Randevular alınamadı", err));
-  }, []);
+    if (kullanici && kullanici.id) {
+      axios
+        .get(`http://localhost:8080/api/rezervasyonlar/kullanici/${kullanici.id}?tip=DOKTOR`)
+        .then((res) => {
+          setRandevularim(res.data);
+        })
+        .catch((err) => console.error("Randevular alınamadı", err));
+    }
+  }, [kullanici]);
 
   useEffect(() => {
     if (secilenUzmanlik) {
@@ -39,24 +41,54 @@ function DoktorRandevuAl() {
     }
   }, [secilenUzmanlik]);
 
+  useEffect(() => {
+    if (secilenDoktor && secilenTarih) {
+      axios
+        .get(`http://localhost:8080/api/rezervasyonlar/doktor/${secilenDoktor.id}`)
+        .then((res) => {
+          const dolu = res.data
+            .filter((r) => r.tarih.startsWith(secilenTarih))
+            .map((r) => new Date(r.tarih).toTimeString().substring(0, 5));
+          setDoluSaatler(dolu);
+        })
+        .catch((err) => console.error("Dolu saatler alınamadı", err));
+    }
+  }, [secilenTarih, secilenDoktor]);
+
+  const bugununTarihiStringFormatta = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const buYilinSonGunuStringFormatta = () => {
+    const now = new Date();
+    return `${now.getFullYear()}-12-31`;
+  };
+
   const handleDoktorSec = (doktor) => {
     setSecilenDoktor(doktor);
+    setDoluSaatler([]); // Önce temizle
+  
     axios
       .get(`http://localhost:8080/api/rezervasyonlar/doktor/${doktor.id}`)
       .then((res) => {
-        const saatler = res.data.map((r) => {
-          const date = new Date(r.tarih);
-          return date.getHours().toString().padStart(2, "0") + ":00";
-        });
-        setDoluSaatler(saatler);
+       
+        if (secilenTarih) {
+          const dolu = res.data
+            .filter((r) => r.tarih.startsWith(secilenTarih)) 
+            .map((r) => new Date(r.tarih).toTimeString().substring(0, 5)); 
+          setDoluSaatler(dolu);
+        }
       })
       .catch((err) => console.error("Dolu saatler alınamadı", err));
   };
-
   const handleRandevuOnayla = async () => {
-    const bugun = new Date();
-    const tarihStr = `${bugun.getFullYear()}-${(bugun.getMonth() + 1)
-      .toString().padStart(2, "0")}-${bugun.getDate().toString().padStart(2, "0")} ${seciliSaat}`;
+    if (!secilenTarih || !seciliSaat) {
+      alert("Lütfen tarih ve saat seçiniz!");
+      return;
+    }
+
+    const tarihStr = `${secilenTarih} ${seciliSaat}`;
 
     const yeniRandevu = {
       aciklama: `${secilenDoktor.ad} ${secilenDoktor.soyad} muayenesi`,
@@ -73,11 +105,24 @@ function DoktorRandevuAl() {
       setBasariBilgisi({ doktor: secilenDoktor, saat: seciliSaat, tarih: tarihStr });
 
       setTimeout(() => {
-        window.location.reload(); // sayfayı tamamen sıfırlar
+        window.location.reload();
       }, 1000);
     } catch (err) {
       console.error("Randevu kaydı başarısız", err);
       alert("Randevu oluşturulamadı!");
+    }
+  };
+
+  const handleRandevuIptal = async (randevuId) => {
+    const onay = window.confirm("Bu randevuyu iptal etmek istediğinizden emin misiniz?");
+    if (!onay) return;
+
+    try {
+      await axios.delete(`http://localhost:8080/api/rezervasyonlar/${randevuId}`);
+      setRandevularim(prev => prev.filter(r => r.id !== randevuId));
+    } catch (err) {
+      console.error("Randevu silinemedi", err);
+      alert("İptal işlemi sırasında bir hata oluştu.");
     }
   };
 
@@ -112,7 +157,31 @@ function DoktorRandevuAl() {
         <div className="sag-panel">
           {secilenDoktor ? (
             <div className="saat-secimi">
-              <h4>{secilenDoktor.ad} {secilenDoktor.soyad} - Saat Seçimi</h4>
+              <h4>{secilenDoktor.ad} {secilenDoktor.soyad}</h4>
+
+              <div className="tarih-secimi">
+                <h4>Tarih Seçimi</h4>
+                <input
+                  type="date"
+                  value={secilenTarih}
+                  onChange={(e) => {
+                    const secilenGun = new Date(e.target.value).getDay();
+                    if (secilenGun === 0 || secilenGun === 6) {
+                      alert("Sadece hafta içi bir gün seçebilirsiniz!");
+                      setSecilenTarih("");
+                    } else {
+                      setSecilenTarih(e.target.value);
+                    }
+                  }}
+                  min={bugununTarihiStringFormatta()}
+                  max={buYilinSonGunuStringFormatta()}
+                  onKeyDown={(e) => e.preventDefault()}
+                  onPaste={(e) => e.preventDefault()}
+                  onDrop={(e) => e.preventDefault()}
+                />
+              </div>
+
+              <h4>Saat Seçimi</h4>
               <div className="saat-grid">
                 {["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"].map((saat) => (
                   <button
@@ -132,20 +201,19 @@ function DoktorRandevuAl() {
           ) : (
             <div>
               <h3>Randevularım</h3>
-              <ul>
+              <div className="randevu-karti-container">
                 {randevularim.map((r, i) => (
-                  <li key={i}>
-                    <strong>
-                      {new Date(r.tarih).toLocaleDateString()} -{" "}
-                      {new Date(r.tarih).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </strong>{" "}
-                    | Doktor :  {r.doktor?.ad} {r.doktor?.soyad} -{" "} {r.doktor?.uzmanlikAlani}
-                  </li>
+                  <div key={i} className="randevu-karti">
+                    <p><strong>Tarih:</strong> {new Date(r.tarih).toLocaleDateString()}</p>
+                    <p><strong>Saat:</strong> {new Date(r.tarih).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                    <p><strong>Doktor:</strong> {r.doktor?.ad} {r.doktor?.soyad}</p>
+                    <p><strong>Uzmanlık:</strong> {r.doktor?.uzmanlikAlani}</p>
+                    <div className="iptal-buton-sarici">
+                      <button className="iptal-buton" onClick={() => handleRandevuIptal(r.id)}>Randevu İptali</button>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </div>
@@ -155,6 +223,7 @@ function DoktorRandevuAl() {
             <div className="modal-icerik">
               <h4>Randevuyu Onayla</h4>
               <p>Doktor: {secilenDoktor.ad} {secilenDoktor.soyad}</p>
+              <p>Tarih: {secilenTarih}</p>
               <p>Saat: {seciliSaat}</p>
               <div className="modal-butons">
                 <button onClick={handleRandevuOnayla}>Onayla</button>
@@ -167,7 +236,6 @@ function DoktorRandevuAl() {
         <div className="geri-buton-sol-alt">
           <button onClick={() => window.history.back()}>← Geri</button>
         </div>
-
       </div>
     </div>
   );

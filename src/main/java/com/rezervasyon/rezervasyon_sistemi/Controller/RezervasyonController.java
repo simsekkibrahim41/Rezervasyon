@@ -1,6 +1,7 @@
 package com.rezervasyon.rezervasyon_sistemi.Controller;
 
 // Gerekli importlar
+import com.rezervasyon.rezervasyon_sistemi.Enums.RezervasyonTipi;
 import com.rezervasyon.rezervasyon_sistemi.Models.Rezervasyon;
 import com.rezervasyon.rezervasyon_sistemi.Service.RezervasyonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +19,12 @@ public class RezervasyonController {
     @Autowired
     private RezervasyonService rezervasyonService;
 
-    // Yeni rezervasyon oluşturmak için endpoint
-    // HTTP POST isteği alır ve gelen rezervasyonu kaydeder
-//    @PostMapping
-//    public Rezervasyon rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
-//        return rezervasyonService.rezervasyonKaydet(rezervasyon);
-//    }
 
     @PostMapping
     public ResponseEntity<Rezervasyon> rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
         Rezervasyon kaydedilen = rezervasyonService.rezervasyonKaydet(rezervasyon);
         return ResponseEntity.ok(kaydedilen);
     }
-
-
-
 
     // Tüm rezervasyonları listelemek için endpoint
     // HTTP GET isteği alır ve tüm rezervasyonları döner
@@ -54,37 +46,31 @@ public class RezervasyonController {
         return rezervasyonService.rezervasyonGuncelle(rezervasyon);
     }
 
-
-    @GetMapping("/kullanici/{kullaniciId}")
-    public List<Rezervasyon> getKullaniciRandevulari(@PathVariable Long kullaniciId) {
-        return rezervasyonService.getRezervasyonlarByKullaniciId(kullaniciId);
-    }
-
-
-    //@PathVariable → URL'den gelen ID
-    //@RequestBody → Gövde (body)'deki rezervasyon verisi
-
-
     // Rezervasyonu siler
     @DeleteMapping("/{id}")
     public ResponseEntity<String> rezervasyonSil(@PathVariable Long id) {
         Rezervasyon rezervasyon = rezervasyonService.rezervasyonGetir(id);
-
         if (rezervasyon == null) {
             return ResponseEntity.status(404).body("Rezervasyon bulunamadı.");
         }
-
         rezervasyonService.rezervasyonSil(id);
-
         if (rezervasyon.getRezervasyonTipi().toString().equals("RESTORAN")) {
             rezervasyonService.restoranRezervasyonSil(rezervasyon.getRestoran(), rezervasyon.getKullanici());
         }
-
         return ResponseEntity.ok("Rezervasyon başarıyla silindi.");
     }
 
-
-
+    @GetMapping("/kullanici/{kullaniciId}")
+    public List<Rezervasyon> getKullaniciRezervasyonlari(
+            @PathVariable Long kullaniciId,
+            @RequestParam(required = false) RezervasyonTipi tip
+    ) {
+        if (tip != null) {
+            return rezervasyonService.getKullaniciRezervasyonlariByTip(kullaniciId, tip);
+        } else {
+            return rezervasyonService.getRezervasyonlarByKullaniciId(kullaniciId);
+        }
+    }
 
     @GetMapping("/doktor/{doktorId}")
     public List<Rezervasyon> getDoktorRandevulari(@PathVariable Long doktorId) {

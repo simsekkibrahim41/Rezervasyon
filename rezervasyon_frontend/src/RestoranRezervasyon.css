@@ -88,18 +88,27 @@
   margin-top: 15px;
 }
 
+/* Yeni Saat Butonları */
 .saat-button {
   padding: 8px 16px;
-  background-color: #2196F3;
-  color: white;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.saat-button:hover {
-  background-color: #1976d2;
+/* Boş Saat */
+.saat-button.bos {
+  background-color: #4caf50; /* Yeşil */
+  color: white;
+}
+
+/* Dolu Saat */
+.saat-button.dolu {
+  background-color: #aaa; /* Gri */
+  color: white;
+  cursor: not-allowed;
 }
 
 /* Modal Arkaplanı */
@@ -118,14 +127,13 @@
 
 /* Modal İçeriği */
 .modal-icerik {
-  background-color: rgba(0, 0, 0, 0.6);  /* daha koyu oldu */
+  background-color: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   padding: 30px;
   border-radius: 12px;
   width: 320px;
   text-align: center;
   animation: fadeIn 0.3s ease-in-out;
-  
 }
 
 /* Onayla ve İptal Butonları */
@@ -136,7 +144,6 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  
 }
 
 .onayla-button {
@@ -157,6 +164,13 @@
   background-color: #c82333;
 }
 
+.modal-buton-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
 /* Geri Butonu */
 .geri-butonu {
   background-color: #6c757d;
@@ -171,4 +185,60 @@
 
 .geri-butonu:hover {
   background-color: #5a6268;
+}
+
+.rezervasyon-karti {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  color: white;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.rezervasyon-karti p {
+  margin: 5px 0;
+}
+
+.geri-buton-sol-alt {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+}
+
+.geri-buton-sol-alt button {
+  padding: 10px 15px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.geri-buton-sol-alt button:hover {
+  background-color: #000000;
+}
+
+.iptal-buton-sarici {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.iptal-buton {
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #141313;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.iptal-buton:hover {
+  background-color: #e60000;
 }

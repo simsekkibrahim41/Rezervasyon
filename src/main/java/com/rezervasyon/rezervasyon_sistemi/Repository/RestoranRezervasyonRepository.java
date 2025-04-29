@@ -32,5 +32,9 @@ public interface RestoranRezervasyonRepository extends JpaRepository<RestoranRez
 
     List<RestoranRezervasyon> findByRestoranIdAndKullaniciId(Long restoranId, Long kullaniciId);
 
+
+    boolean existsByRestoranIdAndMasaNoAndTarihAndSaat(Long restoranId, int masaNo, Date tarih, String saat);
+
+
 }
 

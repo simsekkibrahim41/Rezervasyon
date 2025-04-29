@@ -10,7 +10,9 @@ import com.rezervasyon.rezervasyon_sistemi.Repository.KullaniciRepository;
 import com.rezervasyon.rezervasyon_sistemi.Repository.RestoranRepository;
 import com.rezervasyon.rezervasyon_sistemi.Repository.RezervasyonRepository;
 import com.rezervasyon.rezervasyon_sistemi.Repository.RestoranRezervasyonRepository;
+import com.rezervasyon.rezervasyon_sistemi.Service.RestoranRezervasyonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +20,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/restoranRezervasyonlar")
-@CrossOrigin(origins = "http://localhost:5173")  // Vite'ın çalıştığı portu buraya yaz
+@CrossOrigin(origins = "http://localhost:5175")
 public class RestoranRezervasyonController {
 
     @Autowired
@@ -32,16 +34,34 @@ public class RestoranRezervasyonController {
 
     @Autowired
     private RezervasyonRepository rezervasyonRepository;
+    @Autowired
+    private RestoranRezervasyonService restoranRezervasyonService;
+
 
     @PostMapping
-    public ResponseEntity<RestoranRezervasyon> restoranRezervasyonEkle(@RequestBody RestoranRezervasyonDto rezervasyonDto) {
+    public ResponseEntity<?> restoranRezervasyonEkle(@RequestBody RestoranRezervasyonDto rezervasyonDto) {
+
+        // Önce restorandaki masa + saat + tarih çakışması var mı kontrol et
+        boolean rezervasyonVarMi = restoranRezervasyonService.rezervasyonZatenVarMi(
+                rezervasyonDto.getRestoranId(),
+                rezervasyonDto.getMasaNo(),
+                rezervasyonDto.getTarih(),
+                rezervasyonDto.getSaat()
+        );
+
+        if (rezervasyonVarMi) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Bu restoranın bu masası, bu tarih ve saatte zaten rezerve edilmiştir.");
+        }
+
+        // Kullanıcı ve restoran bilgilerini al
         Kullanici kullanici = kullaniciRepository.findById(rezervasyonDto.getKullaniciId())
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
         Restoran restoran = restoranRepository.findById(rezervasyonDto.getRestoranId())
                 .orElseThrow(() -> new RuntimeException("Restoran bulunamadı"));
 
-        // Restoran_rezervasyonlar tablosuna kayıt
+        // RestoranRezervasyon tablosuna kayıt
         RestoranRezervasyon restoranRezervasyon = new RestoranRezervasyon();
         restoranRezervasyon.setKullanici(kullanici);
         restoranRezervasyon.setRestoran(restoran);
@@ -52,7 +72,7 @@ public class RestoranRezervasyonController {
 
         restoranRezervasyonRepository.save(restoranRezervasyon);
 
-        //Rezervasyonlar tablosuna da kayıt
+        // Genel Rezervasyon tablosuna da kayıt
         Rezervasyon rezervasyon = new Rezervasyon();
         rezervasyon.setKullanici(kullanici);
         rezervasyon.setRestoran(restoran);

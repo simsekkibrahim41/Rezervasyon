@@ -8,25 +8,37 @@
   min-height: 550px;
   overflow: hidden;
   justify-content: space-between;
-  gap: 20px;  
+  gap: 20px;
   backdrop-filter: blur(20px);
-  
-  
 }
 
-.sol-panel
- {
+.sol-panel {
   width: 30%;
   padding: 30px;
   background: rgba(0, 0, 0, 0.5);
   border-right: 1px solid #ddd;
-  color : white;
+  color: white;
 }
+
 .sag-panel {
   width: 70%;
-  padding: 30px;  
-  background: rgba(0, 0, 0, 0.5);  
-  color : white;
+  padding: 30px;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 550px;
+  border-radius: 0 10px 10px 0;
+}
+
+.sag-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sag-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
 }
 
 .doktor-listesi {
@@ -34,10 +46,9 @@
   padding: 0px;
   margin-top: 15px;
   color: black;
-  padding-right: 20px; 
+  padding-right: 20px;
   max-height: 500px;
   overflow-y: auto;
-  
 }
 
 .doktor-listesi li {
@@ -87,6 +98,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,11 +114,9 @@
 .modal-butons {
   display: flex;
   justify-content: center;
-  gap: 10px; /* Butonlar arası boşluk */
+  gap: 10px;
   margin-top: 20px;
 }
-
-
 
 .geri-buton-sol-alt {
   position: absolute;
@@ -122,4 +132,81 @@
   cursor: pointer;
 }
 
+.randevu-karti-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
 
+.randevu-karti {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  color: white;
+  font-size: 16px;
+  line-height: 1.6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* İPTAL butonunu kart içinde sağ alt köşeye hizalar */
+.iptal-buton-sarici {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.iptal-buton {
+  padding: 6px 14px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: #1b1a1a;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.iptal-buton:hover {
+  background-color: #e60000;
+}
+
+.randevu-karti p {
+  margin: 5px 0;
+}
+
+.tarih-secimi {
+  margin: 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.tarih-secimi h4 {
+  
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.tarih-secimi input[type="date"] {
+  padding: 10px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #333;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.tarih-secimi input[type="date"]:focus {
+  border-color: #4caf50;
+}
+
+/* Saat seçimi başlığı üstü çizgili */
+.saat-secimi h4 {
+  padding-top: 15px;
+  margin-top: 20px;
+}

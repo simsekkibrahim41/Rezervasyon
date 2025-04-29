@@ -20,20 +20,7 @@ public interface RezervasyonRepository extends JpaRepository<Rezervasyon, Long>
     List<Rezervasyon> findByDoktorId(Long doktorId);
 
 
+    List<Rezervasyon> findByKullaniciIdAndRezervasyonTipi(Long kullaniciId, RezervasyonTipi rezervasyonTipi);
 
-    /**
-     *      // Belirli bir tarih aralığındaki rezervasyonları getir
-     *      List<Rezervasyon> findByTarihBetween(LocalDateTime baslangic, LocalDateTime bitis);
-     *
-
-     *
-     *      // Kullanıcının belirli bir tarih aralığındaki rezervasyonlarını getir
-     *      List<Rezervasyon> findByKullaniciIdAndTarihBetween(Long kullaniciId, LocalDateTime baslangic, LocalDateTime bitis);
-     *
-     *
-     // En son eklenen rezervasyonları listele (Örn: Son 10 kayıt)
-     List<Rezervasyon> findTop10ByOrderByOlusturmaTarihiDesc();
-     *
-     */
 
 }

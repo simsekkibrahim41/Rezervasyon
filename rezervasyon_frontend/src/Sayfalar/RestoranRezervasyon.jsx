@@ -12,8 +12,10 @@ function RestoranRezervasyon() {
   const [secilenMasa, setSecilenMasa] = useState(null);
   const [secilenSaat, setSecilenSaat] = useState(null);
   const [modalAcik, setModalAcik] = useState(false);
+  const [rezervasyonlarim, setRezervasyonlarim] = useState([]);
+  const [secilenTarih, setSecilenTarih] = useState("");
+  const [doluSaatler, setDoluSaatler] = useState([]);
 
-  // Kullanıcı bilgisi localStorage'dan doğru şekilde çekiliyor
   const kullanici = JSON.parse(localStorage.getItem("kullanici"));
   const kullaniciId = kullanici?.id;
 
@@ -25,6 +27,10 @@ function RestoranRezervasyon() {
     axios.get("http://localhost:8080/api/restoranlar/mutfakTurleri")
       .then(res => setMutfakTurleri(res.data))
       .catch(err => console.error("Mutfak türleri alınamadı", err));
+
+    axios.get(`http://localhost:8080/api/rezervasyonlar/kullanici/${kullaniciId}?tip=RESTORAN`)
+      .then(res => setRezervasyonlarim(res.data))
+      .catch(err => console.error("Restoran rezervasyonları alınamadı", err));
   }, []);
 
   useEffect(() => {
@@ -41,8 +47,17 @@ function RestoranRezervasyon() {
     }
   }, [secilenSehir, secilenMutfak]);
 
+  useEffect(() => {
+    if (secilenRestoran && secilenTarih) {
+      axios
+        .get(`http://localhost:8080/api/restoranRezervasyonlar/doluSaatler?restoranId=${secilenRestoran.id}&tarih=${secilenTarih}`)
+        .then(res => setDoluSaatler(res.data))
+        .catch(err => console.error("Dolu saatler alınamadı", err));
+    }
+  }, [secilenRestoran, secilenTarih]);
+
   const masaListesi = [1, 2, 3, 4, 5];
-  const saatListesi = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+  const saatListesi = ["10:00", "12:00", "14:00", "16:00"];
 
   const rezervasyonuOnayla = async () => {
     try {
@@ -56,10 +71,9 @@ function RestoranRezervasyon() {
         restoranId: secilenRestoran.id,
         masaNo: secilenMasa,
         saat: secilenSaat,
-        tarih: new Date().toISOString().slice(0, 10),
+        tarih: secilenTarih,
         aciklama: `Masa ${secilenMasa} için saat ${secilenSaat} rezervasyonu`
       };
-      
 
       console.log("Gönderilen Rezervasyon DTO:", rezervasyonDto);
 
@@ -69,7 +83,26 @@ function RestoranRezervasyon() {
       window.location.reload();
     } catch (error) {
       console.error("Rezervasyon kaydedilemedi", error);
-      alert("Rezervasyon sırasında bir hata oluştu.");
+      if (error.response && error.response.status === 409) {
+        alert("Bu masa, bu tarih ve saatte zaten rezerve edilmiştir.");
+        window.location.reload();
+      } else {
+        alert("Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.");
+      }
+    }
+  };
+
+  const rezervasyonIptalEt = async (id) => {
+    const onay = window.confirm("Bu rezervasyonu iptal etmek istediğinizden emin misiniz?");
+    if (!onay) return;
+
+    try {
+      await axios.delete(`http://localhost:8080/api/rezervasyonlar/${id}`);
+      alert("Rezervasyon iptal edildi.");
+      window.location.reload();
+    } catch (err) {
+      console.error("Silme hatası:", err);
+      alert("İptal işlemi başarısız oldu.");
     }
   };
 
@@ -112,18 +145,36 @@ function RestoranRezervasyon() {
               setSecilenSaat(null);
             }}>Geri</button>
 
-            <h2>{secilenRestoran.ad} - Masa Seçimi</h2>
-            <div className="masa-secim">
-              {masaListesi.map((masa) => (
-                <button
-                  key={masa}
-                  className="masa-button"
-                  onClick={() => setSecilenMasa(masa)}
-                >
-                  Masa {masa}
-                </button>
-              ))}
+            <div className="tarih-secimi">
+              <h4>Tarih Seçimi</h4>
+              <input
+                type="date"
+                value={secilenTarih}
+                onChange={(e) => setSecilenTarih(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                max={`${new Date().getFullYear()}-12-31`}
+                onKeyDown={(e) => e.preventDefault()}
+                onPaste={(e) => e.preventDefault()}
+                onDrop={(e) => e.preventDefault()}
+              />
             </div>
+
+            {secilenTarih && (
+              <>
+                <h2>{secilenRestoran.ad} - Masa Seçimi</h2>
+                <div className="masa-secim">
+                  {masaListesi.map((masa) => (
+                    <button
+                      key={masa}
+                      className="masa-button"
+                      onClick={() => setSecilenMasa(masa)}
+                    >
+                      Masa {masa}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
             {secilenMasa && (
               <>
@@ -132,7 +183,8 @@ function RestoranRezervasyon() {
                   {saatListesi.map((saat) => (
                     <button
                       key={saat}
-                      className="saat-button"
+                      className={doluSaatler.includes(saat) ? "saat-button dolu" : "saat-button bos"}
+                      disabled={doluSaatler.includes(saat)}
                       onClick={() => {
                         setSecilenSaat(saat);
                         setModalAcik(true);
@@ -163,22 +215,54 @@ function RestoranRezervasyon() {
           </>
         ) : (
           <>
-            <h3>Restoranlar</h3>
-            {restoranlar.length > 0 ? (
-              restoranlar.map((restoran) => (
-                <div key={restoran.id} className="restoran-karti" onClick={() => setSecilenRestoran(restoran)}>
-                  <h4>{restoran.ad}</h4>
-                  <p>{restoran.aciklama}</p>
-                  <p><strong>Şehir:</strong> {restoran.sehir}</p>
-                  <p><strong>Mutfak:</strong> {restoran.mutfakTuru.replaceAll("_", " ")}</p>
-                  <p><strong>Boş Masa Sayısı:</strong> {restoran.bosMasaSayisi}</p>
-                </div>
-              ))
+            {secilenSehir && secilenMutfak ? (
+              <>
+                <h3>Restoranlar</h3>
+                {restoranlar.length > 0 ? (
+                  restoranlar.map((restoran) => (
+                    <div key={restoran.id} className="restoran-karti" onClick={() => setSecilenRestoran(restoran)}>
+                      <h4>{restoran.ad}</h4>
+                      <p>{restoran.aciklama}</p>
+                      <p><strong>Şehir:</strong> {restoran.sehir}</p>
+                      <p><strong>Mutfak:</strong> {restoran.mutfakTuru.replaceAll("_", " ")}</p>
+                      <p><strong>Boş Masa Sayısı:</strong> {restoran.bosMasaSayisi}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>Bu kriterlere uygun restoran bulunamadı.</p>
+                )}
+              </>
             ) : (
-              <p>Bu kriterlere uygun restoran bulunamadı.</p>
+              <>
+                <h3>Restoran Rezervasyonlarım</h3>
+                {rezervasyonlarim.length > 0 ? (
+                  rezervasyonlarim.map((rez, index) => (
+                    <div key={index} className="rezervasyon-karti">
+                      <p><strong>Tarih:</strong> {new Date(rez.tarih).toLocaleDateString()}</p>
+                      <p><strong>Restoran:</strong> {rez.restoran?.ad}</p>
+                      <p><strong>Detay:</strong> {rez.aciklama}</p>
+
+                      <div className="iptal-buton-sarici">
+                        <button
+                          className="iptal-buton"
+                          onClick={() => rezervasyonIptalEt(rez.id)}
+                        >
+                          Rezervasyon İptali
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>Henüz restoran rezervasyonunuz bulunmuyor.</p>
+                )}
+              </>
             )}
           </>
         )}
+      </div>
+
+      <div className="geri-buton-sol-alt">
+        <button onClick={() => window.history.back()}>← Geri</button>
       </div>
     </div>
   );

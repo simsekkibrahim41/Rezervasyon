@@ -43,4 +43,11 @@ public class RestoranRezervasyonService {
     public void rezervasyonSil(Long id) {
         rezervasyonRepository.deleteById(id);
     }
+
+    public boolean rezervasyonZatenVarMi(Long restoranId, int masaNo, Date tarih, String saat) {
+        return rezervasyonRepository.existsByRestoranIdAndMasaNoAndTarihAndSaat(restoranId, masaNo, tarih, saat);
+    }
+
+
+
 }

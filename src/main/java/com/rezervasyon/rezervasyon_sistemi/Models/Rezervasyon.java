@@ -75,4 +75,7 @@ public class Rezervasyon {
     protected void onUpdate() {
         this.guncellemeTarihi = LocalDateTime.now();
     }
+
+    @Column(name = "aktif")
+    private boolean aktif = true;
 }

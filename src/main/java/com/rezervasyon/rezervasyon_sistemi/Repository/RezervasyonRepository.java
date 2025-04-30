@@ -21,6 +21,8 @@ public interface RezervasyonRepository extends JpaRepository<Rezervasyon, Long>
 
 
     List<Rezervasyon> findByKullaniciIdAndRezervasyonTipi(Long kullaniciId, RezervasyonTipi rezervasyonTipi);
+    List<Rezervasyon> findByKullaniciIdAndRezervasyonTipiAndAktifTrue(Long kullaniciId, RezervasyonTipi rezervasyonTipi);
+
 
 
 }

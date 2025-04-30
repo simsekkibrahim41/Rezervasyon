@@ -45,18 +45,29 @@ public class RezervasyonService {
     public Rezervasyon rezervasyonGuncelle(Rezervasyon rezervasyon) {return rezervasyonRepository.save(rezervasyon);}
 
     // Rezervasyonu siler
-    public void rezervasyonSil(Long id) {rezervasyonRepository.deleteById(id);}
-
-    public List<Rezervasyon> getKullaniciRezervasyonlariByTip(Long kullaniciId, RezervasyonTipi tip) {
-        return rezervasyonRepository.findByKullaniciIdAndRezervasyonTipi(kullaniciId, tip);
+    public void rezervasyonSil(Long id) {
+        Rezervasyon rezervasyon = rezervasyonRepository.findById(id).orElse(null);
+        if (rezervasyon != null) {
+            rezervasyon.setAktif(false); // pasif yap
+            rezervasyonRepository.save(rezervasyon);
+        }
     }
+    public List<Rezervasyon> getKullaniciRezervasyonlariByTip(Long kullaniciId, RezervasyonTipi tip) {
+        return rezervasyonRepository.findByKullaniciIdAndRezervasyonTipiAndAktifTrue(kullaniciId, tip);
+    }
+
 
 
     @Transactional
     public void restoranRezervasyonSil(Restoran restoran, Kullanici kullanici) {
-        List<RestoranRezervasyon> rezervasyonlar = restoranRezervasyonRepository.findByRestoranIdAndKullaniciId(restoran.getId(), kullanici.getId());
+        List<RestoranRezervasyon> rezervasyonlar = restoranRezervasyonRepository
+                .findByRestoranIdAndKullaniciId(restoran.getId(), kullanici.getId());
+
         if (rezervasyonlar != null && !rezervasyonlar.isEmpty()) {
-            restoranRezervasyonRepository.deleteAll(rezervasyonlar);
+            for (RestoranRezervasyon r : rezervasyonlar) {
+                r.setAktif(false); // silme yerine pasif yap
+            }
+            restoranRezervasyonRepository.saveAll(rezervasyonlar);
         }
     }
 

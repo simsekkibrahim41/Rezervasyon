@@ -44,4 +44,8 @@ public class RestoranRezervasyon {
     // Açıklama
     @Column(name = "aciklama")
     private String aciklama;
+
+    @Column(name = "aktif")
+    private boolean aktif = true;
+
 }

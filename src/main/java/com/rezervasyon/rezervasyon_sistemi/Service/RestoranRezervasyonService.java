@@ -41,7 +41,11 @@ public class RestoranRezervasyonService {
 
     // İstenirse rezervasyon silme özelliği
     public void rezervasyonSil(Long id) {
-        rezervasyonRepository.deleteById(id);
+        RestoranRezervasyon rezervasyon = rezervasyonRepository.findById(id).orElse(null);
+        if (rezervasyon != null) {
+            rezervasyon.setAktif(false);                // pasifleştir
+            rezervasyonRepository.save(rezervasyon);    // tekrar kaydet
+        }
     }
 
     public boolean rezervasyonZatenVarMi(Long restoranId, int masaNo, Date tarih, String saat) {

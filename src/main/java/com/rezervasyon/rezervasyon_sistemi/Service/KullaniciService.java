@@ -2,6 +2,7 @@ package com.rezervasyon.rezervasyon_sistemi.Service;
 
 import com.rezervasyon.rezervasyon_sistemi.Models.Kullanici;
 import com.rezervasyon.rezervasyon_sistemi.Repository.KullaniciRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,16 +20,20 @@ public class KullaniciService {
     public Kullanici girisYap(String email, String sifre) {
         Kullanici kullanici = kullaniciRepository.findByEmail(email);
 
-        if (kullanici != null && kullanici.getSifre().equals(sifre)) {
-            return kullanici;
-        }
+        System.out.println("Gelen e-posta: " + email);
+        System.out.println("Gelen şifre: " + sifre);
 
-        for (Kullanici bekleyen : bekleyenKullanicilar.values()) {
-            if (bekleyen.getEmail().equals(email) && bekleyen.getSifre().equals(sifre)) {
-                return bekleyen;
+        if (kullanici != null) {
+            System.out.println("Veritabanındaki hashli şifre: " + kullanici.getSifre());
+            boolean eslesme = passwordEncoder.matches(sifre, kullanici.getSifre());
+            System.out.println("Şifre eşleşiyor mu? " + eslesme);
+
+            if (eslesme) {
+                return kullanici;
             }
         }
 
+        System.out.println("Giriş başarısız!");
         return null;
     }
 
@@ -39,7 +44,7 @@ public class KullaniciService {
         this.kullaniciRepository = kullaniciRepository;
     }
 
-    // Yeni kullanıcı kaydetme
+    // Yeni kullanıcı kaydetme(JSON veri testi)
     public Kullanici kullaniciKaydet(Kullanici kullanici) {
         return kullaniciRepository.save(kullanici);
     }
@@ -64,7 +69,7 @@ public class KullaniciService {
     }
 
 
-    //MAİL GÖNDERME VE DOĞRULAMA
+    //MAİL GÖNDERME VE DOĞRULAMA, KAYDETME
 
 
 
@@ -99,24 +104,28 @@ public class KullaniciService {
         );
     }
 
-    // Doğrulama linkine tıklanınca çağrılır
-    public boolean dogrulamaTamamla(String token) {
 
+
+    // Doğrulama linkine tıklanınca çağrılır
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public boolean dogrulamaTamamla(String token) {
         Kullanici kullanici = bekleyenKullanicilar.get(token);
 
         if (kullanici != null) {
-
-            System.out.println(" Doğrulama ile veritabanına kaydedilen şifre: " + kullanici.getSifre());
-
             kullanici.setEmailVerified(true);
-            kullaniciRepository.save(kullanici); //  İlk kez burada veritabanına kaydolur
-            bekleyenKullanicilar.remove(token); // Artık map'ten sil
+
+            // Şifreyi hashle
+            String hashliSifre = passwordEncoder.encode(kullanici.getSifre());
+            kullanici.setSifre(hashliSifre);
+
+            kullaniciRepository.save(kullanici); // veritabanına hashli şifre ile kayıt olur
+            bekleyenKullanicilar.remove(token);// Artık map'ten sil
             return true;
         }
-
-        return false; // Token bulunamazsa: geçersiz ya da süresi dolmuş
+        return false;       // Token bulunamazsa: geçersiz ya da süresi dolmuş
     }
-
 
 
 

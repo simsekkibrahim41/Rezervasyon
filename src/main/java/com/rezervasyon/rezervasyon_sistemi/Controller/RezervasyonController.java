@@ -21,10 +21,31 @@ public class RezervasyonController {
 
 
     @PostMapping
-    public ResponseEntity<Rezervasyon> rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
+    public ResponseEntity<?> rezervasyonOlustur(@RequestBody Rezervasyon rezervasyon) {
+        if (rezervasyon.getRezervasyonTipi().equals(RezervasyonTipi.DOKTOR)) {
+            boolean zatenVar = rezervasyonService.doktorRandevuZatenVarMi(
+                    rezervasyon.getDoktor().getId(),
+                    rezervasyon.getTarih()
+            );
+
+            if (zatenVar) {
+                return ResponseEntity.status(409).build();
+            }
+        }
+
         Rezervasyon kaydedilen = rezervasyonService.rezervasyonKaydet(rezervasyon);
         return ResponseEntity.ok(kaydedilen);
     }
+
+
+    @GetMapping("/doktor/{doktorId}/aktif")
+    public List<Rezervasyon> getAktifRandevular(@PathVariable Long doktorId) {
+        return rezervasyonService.getAktifRandevularByDoktorId(doktorId);
+    }
+
+
+
+
 
     // Tüm rezervasyonları listelemek için endpoint
     // HTTP GET isteği alır ve tüm rezervasyonları döner
@@ -74,6 +95,7 @@ public class RezervasyonController {
 
     @GetMapping("/doktor/{doktorId}")
     public List<Rezervasyon> getDoktorRandevulari(@PathVariable Long doktorId) {
-        return rezervasyonService.getRezervasyonlarByDoktorId(doktorId);
+        return rezervasyonService.getRezervasyonlarByDoktorIdAndAktifTrue(doktorId);
     }
+
 }

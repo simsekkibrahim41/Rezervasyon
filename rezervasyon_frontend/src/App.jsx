@@ -11,6 +11,8 @@ import Kayit from './Sayfalar/Kayit';
 import RezervasyonAnaSayfa from './Sayfalar/RezervasyonAnaSayfa';
 import DoktorRandevuAl from './Sayfalar/DoktorRandevuAl';
 import RestoranRezervasyon from "./Sayfalar/RestoranRezervasyon"; 
+import Haberler from "./Sayfalar/Haberler";
+
 
 
 
@@ -25,6 +27,8 @@ function App() {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/doktor-randevu" element={<DoktorRandevuAl />} />
         <Route path="/restoran" element={<RestoranRezervasyon />} />
+        <Route path="/haberler" element={<Haberler />} />
+
       </Routes>         
     </Router> // sAYFA GEÇİŞLERİ BU YAPIYLA YÖNETİLİR, Routes İSE ADRESLERİN LİSTELENDİĞİ BLOGU KAPSAR
   );

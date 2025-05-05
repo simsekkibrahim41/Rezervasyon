@@ -68,15 +68,15 @@ function DoktorRandevuAl() {
   const handleDoktorSec = (doktor) => {
     setSecilenDoktor(doktor);
     setDoluSaatler([]); // Önce temizle
-  
+
     axios
       .get(`http://localhost:8080/api/rezervasyonlar/doktor/${doktor.id}`)
       .then((res) => {
-       
+
         if (secilenTarih) {
           const dolu = res.data
-            .filter((r) => r.tarih.startsWith(secilenTarih)) 
-            .map((r) => new Date(r.tarih).toTimeString().substring(0, 5)); 
+            .filter((r) => r.tarih.startsWith(secilenTarih))
+            .map((r) => new Date(r.tarih).toTimeString().substring(0, 5));
           setDoluSaatler(dolu);
         }
       })
@@ -181,22 +181,29 @@ function DoktorRandevuAl() {
                 />
               </div>
 
-              <h4>Saat Seçimi</h4>
-              <div className="saat-grid">
-                {["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"].map((saat) => (
-                  <button
-                    key={saat}
-                    disabled={doluSaatler.includes(saat)}
-                    onClick={() => {
-                      setSeciliSaat(saat);
-                      setModalAcik(true);
-                    }}
-                    className={doluSaatler.includes(saat) ? "dolu" : "bos"}
-                  >
-                    {saat}
-                  </button>
-                ))}
-              </div>
+              {secilenTarih && (
+                <>
+                  <h4>Saat Seçimi</h4>
+                  <div className="saat-grid">
+                    {["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"].map((saat) => (
+                      <button
+                        key={saat}
+                        disabled={doluSaatler.includes(saat)}
+                        onClick={() => {
+                          setSeciliSaat(saat);
+                          setModalAcik(true);
+                        }}
+                        className={doluSaatler.includes(saat) ? "dolu" : "bos"}
+                      >
+                        {saat}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+
+
             </div>
           ) : (
             <div>

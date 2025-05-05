@@ -24,5 +24,9 @@ public interface RezervasyonRepository extends JpaRepository<Rezervasyon, Long>
     List<Rezervasyon> findByKullaniciIdAndRezervasyonTipiAndAktifTrue(Long kullaniciId, RezervasyonTipi rezervasyonTipi);
 
 
+    boolean existsByDoktorIdAndTarihAndAktifTrue(Long doktorId, java.time.LocalDateTime tarih);
+
+    List<Rezervasyon> findByDoktorIdAndAktifTrue(Long doktorId);
+
 
 }

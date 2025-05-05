@@ -64,10 +64,10 @@ function RezervasyonAnaSayfa() {
                 </div>
 
                 {/* Otel */}
-                <div className="rez-kart" onClick={() => navigate('/otel')}>
-                    <img src="/otel.jpg" alt="Otel" className="rez-img" />
+                <div className="rez-kart" onClick={() => navigate('/haberler')}>
+                    <img src="/kbb.png" alt="Otel" className="rez-img" />
                     <div className="rez-overlay">
-                        Otel Rezervasyonu
+                        Haberler
                     </div>
                 </div>
             </div>

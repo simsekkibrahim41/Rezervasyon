@@ -49,7 +49,7 @@ public class RestoranRezervasyonService {
     }
 
     public boolean rezervasyonZatenVarMi(Long restoranId, int masaNo, Date tarih, String saat) {
-        return rezervasyonRepository.existsByRestoranIdAndMasaNoAndTarihAndSaat(restoranId, masaNo, tarih, saat);
+        return rezervasyonRepository.existsByRestoranIdAndMasaNoAndTarihAndSaatAndAktifTrue(restoranId, masaNo, tarih, saat);
     }
 
 

@@ -50,7 +50,9 @@ function AdminPanel() {
             .get("http://localhost:8080/api/rezervasyonlar")
             .then((res) => {
                 const filtreli = res.data.filter(
-                    (r) => r.kullanici.id === kullanici.id
+                    (r) =>
+                        r.kullanici.id === kullanici.id &&
+                        r.aktif === true
                 );
                 setRezervasyonlar(filtreli);
             })
@@ -105,7 +107,7 @@ function AdminPanel() {
 
                     {secilenKullanici && (
                         <div className="rezervasyon-kolonlar">
-                            {["DOKTOR", "RESTORAN", "OTEL"].map((tip) => {
+                            {["DOKTOR", "RESTORAN"].map((tip) => {
                                 const ilgiliRezervasyonlar = rezervasyonlar.filter((r) => r.rezervasyonTipi === tip);
 
                                 return (
